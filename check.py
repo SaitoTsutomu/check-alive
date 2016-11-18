@@ -16,7 +16,7 @@ def send_mail(to, sub, body):
         smtp.login(fr, os.environ.get('MAIL_PASSWD'))
         smtp.sendmail(fr, [to], msg.as_string())
 
-url = 'http://' + os.environ.get('TARGET')
+url = 'http://' + os.environ.get('TARGET', '127.0.0.1')
 itv = int(os.environ.get('INTERVAL', '60'))
 tmo = int(os.environ.get('TIME_OUT', '60'))
 isdwn = False
