@@ -17,12 +17,18 @@ def send_mail(to, sub, body):
         smtp.sendmail(fr, [to], msg.as_string())
 
 url = 'http://' + os.environ.get('TARGET')
+itv = int(os.environ.get('INTERVAL', '60'))
+tmo = int(os.environ.get('TIME_OUT', '60'))
+isdwn = False
 while True:
     try:
-        response = urllib.request.urlopen(url, timeout=60)
+        response = urllib.request.urlopen(url, timeout=tmo)
         html = response.read(1)
+        isdwn = False
     except Exception as e:
-        send_mail(os.environ.get('MAIL_TO'), 'Site down',
-                  'Down %s @%s\n%s'%(url, datetime.datetime.now(), e))
-        break
-    sleep(60*1)
+        if not isdwn:
+            isdwn = True
+            send_mail(os.environ.get('MAIL_TO'), 'Site down',
+                      'Down %s @%s\n%s'%(url, datetime.datetime.now(), e))
+    sleep(itv)
+
